@@ -1,4 +1,4 @@
-from base_interface import BaseInterface
+from data_interfaces.base_interface import BaseInterface
 
 class CurriculumConditions(BaseInterface):
     def __init__(self, env, seed, trials=10):

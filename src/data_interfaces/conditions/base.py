@@ -1,4 +1,4 @@
-from base_interface import BaseInterface
+from data_interfaces.base_interface import BaseInterface
 
 class BaseConditions(BaseInterface):
     def __init__(self, env, seed, total_conditions, save_dir='/baseconditions'):
