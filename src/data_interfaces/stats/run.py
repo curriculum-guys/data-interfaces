@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from src.base_interface import BaseInterface
+from base_interface import BaseInterface
 
 class RunStats(BaseInterface):
     def __init__(self, env, seed, features):

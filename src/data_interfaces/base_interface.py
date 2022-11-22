@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from src.utils import get_root_dir, create_dir, remove_file, verify_file, create_dirs
+from utils import get_root_dir, create_dir, remove_file, verify_file, create_dirs
 
 class BaseInterface:
     def __init__(self, env, seed, columns, interface_dir):

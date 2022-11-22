@@ -1,4 +1,4 @@
-from src.base_interface import BaseInterface
+from base_interface import BaseInterface
 
 class SpecialistStats(BaseInterface):
     def __init__(self, env, seed, name):
