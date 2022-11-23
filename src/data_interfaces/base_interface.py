@@ -13,7 +13,7 @@ class BaseInterface:
         self.data_dir = f'{get_root_dir()}/data/'
         self.env_dir = self.data_dir + self.env
         create_dir(self.env_dir)
-        self.interface_name = interface_dir.replace('/', '')
+        self.interface_name = interface_dir.replace('/', '').replace('_', '')
         self.interface_dir = self.env_dir + interface_dir
         create_dirs(self.env_dir, interface_dir)
         self.stage_dir = self.interface_dir + '/stg/'
