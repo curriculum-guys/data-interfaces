@@ -6,7 +6,7 @@ from data_interfaces.remote.drive_manager import DriveManager
 from pydrive.settings import InvalidConfigError
 
 class BaseInterface:
-    def __init__(self, env, seed, columns, interface_dir, upload_interface=None):
+    def __init__(self, env, seed, columns, interface_dir, upload_reference=None):
         self.columns = columns
         self.seed = seed
         self.env = env
@@ -20,8 +20,8 @@ class BaseInterface:
         create_dir(self.stage_dir)
         self.stages = []
 
-        self.upload_interface = upload_interface
-        self.upload_enabled = True if upload_interface else False
+        self.upload_reference = upload_reference
+        self.upload_enabled = True if upload_reference else False
         if self.upload_enabled:
             self.drive_manager = DriveManager()
             self.fetch_drive()
@@ -41,7 +41,7 @@ class BaseInterface:
         data_file = f'{self.interface_dir}/s{self.seed}_run.csv'
         data_name = f's{self.seed}_{self.interface_name}_d{date_time}.csv'
 
-        self.drive_manager.upload_file(data_file, data_name, self.upload_interface)
+        self.drive_manager.upload_file(data_file, data_name, self.upload_reference)
 
     @property
     def __empty_matrix(self):
