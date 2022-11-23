@@ -13,6 +13,7 @@ class BaseInterface:
         self.data_dir = f'{get_root_dir()}/data/'
         self.env_dir = self.data_dir + self.env
         create_dir(self.env_dir)
+        self.interface_name = interface_dir.replace('/', '_')
         self.interface_dir = self.env_dir + interface_dir
         create_dirs(self.env_dir, interface_dir)
         self.stage_dir = self.interface_dir + '/stg/'
@@ -35,11 +36,10 @@ class BaseInterface:
 
     def upload(self):
         now = datetime.now()
-        date_time = now.strftime("%Y.%m.%d")
-        data_type = self.interface_dir.replace('/', '.')
+        date_time = now.strftime("%Y_%m_%d")
 
         data_file = f'{self.interface_dir}/s{self.seed}_run.csv'
-        data_name = f's{self.seed}_t{data_type}_d{date_time}.csv'
+        data_name = f's{self.seed}_t{self.interface_name}_d{date_time}.csv'
 
         self.drive_manager.upload_file(data_file, data_name, self.upload_interface)
 
