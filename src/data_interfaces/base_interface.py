@@ -39,7 +39,7 @@ class BaseInterface:
         date_time = now.strftime("%Y%m%d")
 
         data_file = f'{self.interface_dir}/s{self.seed}_run.csv'
-        data_name = f's{self.seed}_t{self.interface_name}_d{date_time}.csv'
+        data_name = f's{self.seed}_{self.interface_name}_d{date_time}.csv'
 
         self.drive_manager.upload_file(data_file, data_name, self.upload_interface)
 
