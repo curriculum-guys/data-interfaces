@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 from data_interfaces.utils import get_root_dir, create_dir, remove_file, verify_file, create_dirs
-from data_interfaces.upload.drive_manager import DriveManager
+from data_interfaces.remote.drive_manager import DriveManager
 from pydrive.settings import InvalidConfigError
 
 class BaseInterface:
