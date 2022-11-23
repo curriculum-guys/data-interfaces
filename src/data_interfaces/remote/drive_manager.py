@@ -3,6 +3,9 @@ from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 
 class DriveManager:
+    def __init__(self, upload_retries=3) -> None:
+        self.upload_retries = upload_retries
+
     def __get_auth(self):
         auth = GoogleAuth()
         auth_file = "client_token.json"
@@ -22,11 +25,19 @@ class DriveManager:
         return files
 
     def upload_file(self, filepath, filename, subpath=None):
-        parents = self.get_folder(subpath) if subpath else []
-        f = self.drive.CreateFile(dict(
-            title=filename,
-            parents=parents
-        ))
-        f.SetContentFile(filepath)
-        f.Upload()
-        f = None
+        retries = self.upload_retries
+        while retries > 0:
+            try:
+                parents = self.get_folder(subpath) if subpath else []
+                f = self.drive.CreateFile(dict(
+                    title=filename,
+                    parents=parents
+                ))
+                f.SetContentFile(filepath)
+                f.Upload()
+                f = None
+                return True
+            except Exception:
+                print("Retrying...")
+            retries -= 1
+        raise Exception("Upload Failed.")
