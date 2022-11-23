@@ -5,7 +5,7 @@ from pydrive.auth import GoogleAuth
 class DriveManager:
     def __get_auth(self):
         auth = GoogleAuth()
-        auth_file = "token.json"
+        auth_file = "client_token.json"
         if os.path.exists(auth_file):
             auth.LoadCredentialsFile(auth_file)
         else:

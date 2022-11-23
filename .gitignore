@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 *client_secrets.json
-*token.json
+*client_token.json
