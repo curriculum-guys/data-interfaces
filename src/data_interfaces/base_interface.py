@@ -1,20 +1,47 @@
 import numpy as np
 import pandas as pd
+from datetime import datetime
 from data_interfaces.utils import get_root_dir, create_dir, remove_file, verify_file, create_dirs
+from data_interfaces.remote.drive_manager import DriveManager
+from pydrive.settings import InvalidConfigError
 
 class BaseInterface:
-    def __init__(self, env, seed, columns, interface_dir):
+    def __init__(self, env, seed, columns, interface_dir, upload_reference=None):
         self.columns = columns
         self.seed = seed
         self.env = env
         self.data_dir = f'{get_root_dir()}/data/'
         self.env_dir = self.data_dir + self.env
         create_dir(self.env_dir)
+        self.interface_name = interface_dir.replace('/', '').replace('_', '')
         self.interface_dir = self.env_dir + interface_dir
         create_dirs(self.env_dir, interface_dir)
         self.stage_dir = self.interface_dir + '/stg/'
         create_dir(self.stage_dir)
         self.stages = []
+
+        self.upload_reference = upload_reference
+        self.upload_enabled = True if upload_reference else False
+        if self.upload_enabled:
+            self.drive_manager = DriveManager()
+            self.fetch_drive()
+
+    def fetch_drive(self):
+        try:
+            self.drive_manager.get_drive()
+        except InvalidConfigError:
+            print("Missing Credentials! Please check if you have the 'client_credentials.json' file on your workspace.")
+        except Exception as e:
+            raise e
+
+    def upload(self):
+        now = datetime.now()
+        date_time = now.strftime("%Y%m%d")
+
+        data_file = f'{self.interface_dir}/s{self.seed}_run.csv'
+        data_name = f's{self.seed}_{self.interface_name}_d{date_time}.csv'
+
+        self.drive_manager.upload_file(data_file, data_name, self.upload_reference)
 
     @property
     def __empty_matrix(self):
@@ -64,3 +91,6 @@ class BaseInterface:
         df['gen'] = self.__stg_col(stg_len)
         df.to_csv(data_file, index=False)
         self.__purge_stg()
+
+        if self.upload_enabled:
+            self.upload()

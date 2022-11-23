@@ -3,7 +3,7 @@ import pandas as pd
 from data_interfaces.base_interface import BaseInterface
 
 class RunStats(BaseInterface):
-    def __init__(self, env, seed, features):
+    def __init__(self, env, seed, features, **kwargs):
         features = features if features else [
             'msteps',
             'bestfit',
@@ -12,7 +12,7 @@ class RunStats(BaseInterface):
             'avgfit',
             'paramsize'
         ]
-        super().__init__(env, seed, features, '/runstats')
+        super().__init__(env, seed, features, '/runstats', **kwargs)
         self.metrics = []
 
     def __metric_format(self, metric):

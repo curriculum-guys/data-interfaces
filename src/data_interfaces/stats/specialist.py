@@ -1,7 +1,7 @@
 from data_interfaces.base_interface import BaseInterface
 
 class SpecialistStats(BaseInterface):
-    def __init__(self, env, seed, name):
+    def __init__(self, env, seed, name, **kwargs):
         features = [
             'specialist_score',
             'specialist_cycle',
@@ -12,4 +12,4 @@ class SpecialistStats(BaseInterface):
             'specialist_fn',
             'specialist_tp',
         ]
-        super().__init__(env, seed, features, name)
+        super().__init__(env, seed, features, name, **kwargs)
