@@ -41,7 +41,12 @@ class BaseInterface:
         data_file = f'{self.interface_dir}/s{self.seed}_run.csv'
         data_name = f's{self.seed}_{self.interface_name}_d{date_time}.csv'
 
-        self.drive_manager.upload_file(data_file, data_name, self.upload_reference)
+        try:
+            print(f"[{self.interface_name}] Beginning the process of data uploading.")
+            self.drive_manager.upload_file(data_file, data_name, self.upload_reference)
+            print(f"[{self.interface_name}] Data Uploaded.")
+        except Exception:
+            print(f"[{self.interface_name}] Something went wrong when trying to upload data.")
 
     @property
     def __empty_matrix(self):
