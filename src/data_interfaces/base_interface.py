@@ -27,7 +27,7 @@ class BaseInterface:
 
     def fetch_drive(self):
         try:
-            self.manager.get_drive()
+            self.drive_manager.get_drive()
         except InvalidConfigError:
             print("Missing Credentials! Please check if you have the 'client_credentials.json' file on your workspace.")
         except Exception as e:
