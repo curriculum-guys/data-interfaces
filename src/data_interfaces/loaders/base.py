@@ -17,15 +17,15 @@ class BaseLoader:
     def max_gen(self):
         return max(self.data.index)
 
-    def set_data_format(self,  suffix='run', interface=None, date=None):
+    def set_data_format(self, suffix=None, interface=None, date=None):
         base_name = f's{self.seed}'
-        if not interface and not date:
-            return base_name + f'_{suffix}.csv'
         if interface:
             base_name += f'_{interface}'
         if date:
-            base_name += f'_d{date}'
-        return base_name + '.csv'
+            base_name += f'_d{date}'    
+        if suffix:
+            base_name += suffix
+        self.data_format = base_name + '.csv'
 
     def get_data(self, subpath, **kwargs):
         data_path = f'{self.data_dir}/{subpath}/{self.data_format}'
