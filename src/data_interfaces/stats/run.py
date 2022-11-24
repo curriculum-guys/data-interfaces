@@ -48,15 +48,23 @@ class RunStats(BaseInterface):
 
     def upload_test(self):
         file_path = self.__test_file
-        isolate_name = file_path.split('/')[-1].split('.')[0]
-        file_name = f"{isolate_name}_d{self.__now}.npy"
-        self.drive_manager.upload_file(file_path, file_name, self.upload_reference)
+        file_name = f"s{self.seed}_test_d{self.__now}.npy"
+        try:
+            print(f"[{self.interface_name}] Beginning the process of data uploading.")
+            self.drive_manager.upload_file(file_path, file_name, self.upload_reference)
+            print(f"[{self.interface_name}] Data Uploaded.")
+        except Exception:
+            print(f"[{self.interface_name}-test] Something went wrong when trying to upload data.")
 
     def upload_metric(self, metric):
         metric_file = self.__metric_format(metric)
-        isolate_name = metric_file.split('/')[-1].split('.')[0]
-        metric_name = f"{isolate_name}_d{self.__now}.npy"
-        self.drive_manager.upload_file(metric_file, metric_name, self.upload_reference)
+        metric_name = f"s{self.seed}_{metric}_d{self.__now}.npy"
+        try:
+            print(f"[{self.interface_name}] Beginning the process of data uploading.")
+            self.drive_manager.upload_file(metric_file, metric_name, self.upload_reference)
+            print(f"[{self.interface_name}] Data Uploaded.")
+        except Exception:
+            print(f"[{self.interface_name}-metric] Something went wrong when trying to upload data.")
 
     def save(self):
         super().save()
@@ -65,10 +73,8 @@ class RunStats(BaseInterface):
             metric_file = self.__metric_format(metric)
             m_df = np.load(metric_file)
             df[metric] = m_df
+            if self.upload_reference:
+                self.upload_metric(metric)
 
         if not df.empty:
             df.to_csv(self.__metrics_file)
-
-        if self.upload_reference:
-            for metric in self.metrics:
-                self.upload_metric(metric)
