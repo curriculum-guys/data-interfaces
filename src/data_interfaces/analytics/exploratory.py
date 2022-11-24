@@ -3,10 +3,12 @@ from data_interfaces.loaders.base import BaseLoader
 class ExploratoryAnalytics:
     def __init__(self,
         seeds,
+        target_date,
         experiment='xdpole',
-        interfaces=['base_conditions', 'initial_conditions', 'run_stats']
+        interfaces=['base_conditions', 'initial_conditions', 'run_stats'],
     ):
         self.seeds = seeds
+        self.target_date = target_date
         self.experiment = experiment
         self.interfaces = interfaces
         self._data = {}
@@ -29,8 +31,8 @@ class ExploratoryAnalytics:
         for interface in self.interfaces:
             for seed in self.seeds:
                 loader = self.get_loader(seed)
-                subpath = interface.replace('_', '')
-                self._data[seed][interface] = loader.get_data(subpath)
+                inteface = interface.replace('_', '')
+                self._data[seed][interface] = loader.get_data(inteface, self.target_date)
     
     def _get_interface_data(self, interface):
         interface_data = {}
