@@ -50,9 +50,9 @@ class RunStats(BaseInterface):
         file_path = self.__test_file
         file_name = f"s{self.seed}_test_d{self.__now}.npy"
         try:
-            print(f"[{self.interface_name}] Beginning the process of data uploading.")
+            print(f"[{self.interface_name}-test] Beginning the process of data uploading.")
             self.drive_manager.upload_file(file_path, file_name, self.upload_reference)
-            print(f"[{self.interface_name}] Data Uploaded.")
+            print(f"[{self.interface_name}-test] Data Uploaded.")
         except Exception:
             print(f"[{self.interface_name}-test] Something went wrong when trying to upload data.")
 
@@ -60,9 +60,9 @@ class RunStats(BaseInterface):
         metric_file = self.__metric_format(metric)
         metric_name = f"s{self.seed}_{metric}_d{self.__now}.npy"
         try:
-            print(f"[{self.interface_name}] Beginning the process of data uploading.")
+            print(f"[{self.interface_name}-{metric}] Beginning the process of data uploading.")
             self.drive_manager.upload_file(metric_file, metric_name, self.upload_reference)
-            print(f"[{self.interface_name}] Data Uploaded.")
+            print(f"[{self.interface_name}-{metric}] Data Uploaded.")
         except Exception:
             print(f"[{self.interface_name}-{metric}] Something went wrong when trying to upload data.")
 
