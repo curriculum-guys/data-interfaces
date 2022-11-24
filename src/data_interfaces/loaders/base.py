@@ -17,16 +17,6 @@ class BaseLoader:
     def max_gen(self):
         return max(self.data.index)
 
-    def set_data_format(self, suffix=None, interface=None, date=None):
-        base_name = f's{self.seed}'
-        if interface:
-            base_name += f'_{interface}'
-        if date:
-            base_name += f'_d{date}'    
-        if suffix:
-            base_name += suffix
-        self.data_format = base_name + '.csv'
-
-    def get_data(self, subpath, **kwargs):
-        data_path = f'{self.data_dir}/{subpath}/{self.data_format}'
+    def get_data(self, interface, date, **kwargs):
+        data_path = f'{self.data_dir}/{interface}/s{self.seed}_{interface}_d{date}.csv'
         return pd.read_csv(data_path, index_col='gen', **kwargs)
