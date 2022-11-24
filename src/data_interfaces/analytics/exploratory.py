@@ -30,6 +30,8 @@ class ExploratoryAnalytics:
     def load_interfaces(self):
         for interface in self.interfaces:
             for seed in self.seeds:
+                if seed not in self._data:
+                    self._data[seed] = {}
                 loader = self.get_loader(seed)
                 inteface = interface.replace('_', '')
                 self._data[seed][interface] = loader.get_data(inteface, self.target_date)
