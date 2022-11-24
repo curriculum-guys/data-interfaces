@@ -7,7 +7,6 @@ class BaseLoader:
         self.seed = seed
         self.experiment = experiment
         self.trials = trials
-        self.set_data_format()
 
     @property
     def __root_dir(self):
