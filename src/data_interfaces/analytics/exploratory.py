@@ -1,4 +1,5 @@
 from data_interfaces.loaders.base import BaseLoader
+import pandas as pd
 
 class ExploratoryAnalytics:
     def __init__(self,
@@ -58,3 +59,12 @@ class ExploratoryAnalytics:
             return self._get_interface_data(interface)
         else:
             return self._data
+
+    def get_aggregate(self, interface):
+        seeds_data = self.get_data(interface=interface)
+
+        data = pd.DataFrame()
+        for seed, df in seeds_data.items():
+            df['seed'] = seed
+            data = pd.concat([data, df])
+        return data
