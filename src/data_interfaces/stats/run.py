@@ -64,7 +64,7 @@ class RunStats(BaseInterface):
             self.drive_manager.upload_file(metric_file, metric_name, self.upload_reference)
             print(f"[{self.interface_name}] Data Uploaded.")
         except Exception:
-            print(f"[{self.interface_name}-metric] Something went wrong when trying to upload data.")
+            print(f"[{self.interface_name}-{metric}] Something went wrong when trying to upload data.")
 
     def save(self):
         super().save()
