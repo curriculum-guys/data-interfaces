@@ -13,6 +13,10 @@ class ExploratoryAnalytics:
         self.init_loaders()
         self.load_interfaces()
 
+    def set_data_format(self, **kwargs):
+        for loader in self.loaders:
+            loader.set_data_format(**kwargs)
+
     def init_loaders(self):
         self.loaders = {}
 
