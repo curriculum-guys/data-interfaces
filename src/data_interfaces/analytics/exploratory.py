@@ -14,6 +14,8 @@ class ExploratoryAnalytics:
         self.load_interfaces()
 
     def init_loaders(self):
+        self.loaders = {}
+
         for seed in self.seeds:
             self.loaders[seed] = BaseLoader(
                 seed=seed,
