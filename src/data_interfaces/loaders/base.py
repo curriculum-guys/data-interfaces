@@ -2,8 +2,9 @@ import pandas as pd
 from data_interfaces.utils import get_root_dir
 
 class BaseLoader:
-    def __init__(self, seed, experiment, trials=10) -> None:
-        self.data_dir = f'{self.__root_dir}/data/{experiment}'
+    def __init__(self, seed, experiment, interface=None, trials=10) -> None:
+        data_dir = f'data/{interface}' if interface else 'data'
+        self.data_dir = f'{self.__root_dir}/{data_dir}/{experiment}'
         self.seed = seed
         self.experiment = experiment
         self.trials = trials
