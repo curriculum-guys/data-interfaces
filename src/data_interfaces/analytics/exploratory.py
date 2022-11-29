@@ -7,11 +7,13 @@ class ExploratoryAnalytics:
         target_date,
         experiment='xdpole',
         interfaces=['base_conditions', 'initial_conditions', 'run_stats'],
+        simulator=None
     ):
         self.seeds = seeds
         self.target_date = target_date
         self.experiment = experiment
         self.interfaces = interfaces
+        self.simulator = simulator
         self._data = {}
         self.init_loaders()
         self.load_interfaces()
@@ -22,7 +24,8 @@ class ExploratoryAnalytics:
         for seed in self.seeds:
             self.loaders[seed] = BaseLoader(
                 seed=seed,
-                experiment=self.experiment
+                experiment=self.experiment,
+                interface=self.simulator
             )
     
     def get_loader(self, seed) -> BaseLoader:
