@@ -10,9 +10,9 @@ class PhantomLoader(BaseLoader):
         self.initial_conditions_data = self.get_data('initialconditions')
 
     def read_conditions(self, gen):
-        first_row = (gen-1) * self.generation_trials
-        last_row = (gen * self.generation_trials)
+        first_row = (gen-1) * self.trials
+        last_row = (gen * self.trials)
         return self.initial_conditions_data.iloc[first_row:last_row]
 
     def read_evolution(self, gen):
-        return list(self.evolution_data.iloc[gen-1])
+        return list(self.data.iloc[gen-1])
