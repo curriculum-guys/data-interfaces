@@ -6,7 +6,7 @@ from data_interfaces.remote.drive_manager import DriveManager
 from pydrive.settings import InvalidConfigError
 
 class BaseInterface:
-    def __init__(self, env, seed, columns, interface_dir, upload_reference=None):
+    def __init__(self, env, seed, columns, interface_dir, upload_reference=None, remote_upload=False):
         self.columns = columns
         self.seed = seed
         self.env = env
@@ -21,7 +21,7 @@ class BaseInterface:
         self.stages = []
 
         self.upload_reference = upload_reference
-        self.upload_enabled = True if upload_reference else False
+        self.upload_enabled = remote_upload
         if self.upload_enabled:
             self.drive_manager = DriveManager()
             self.fetch_drive()
