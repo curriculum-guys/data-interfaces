@@ -69,12 +69,15 @@ class RunStats(BaseInterface):
     def save(self):
         super().save()
         df = pd.DataFrame()
-        for metric in self.metrics:
-            metric_file = self.__metric_format(metric)
-            m_df = np.load(metric_file)
-            df[metric] = m_df
-            if self.upload_reference:
-                self.upload_metric(metric)
+        try:
+            for metric in self.metrics:
+                metric_file = self.__metric_format(metric)
+                m_df = np.load(metric_file)
+                df[metric] = m_df
+                if self.upload_reference:
+                    self.upload_metric(metric)
+        except:
+            print(f"Something went wrong when trying to save individual metrics")
 
         if not df.empty:
             df.to_csv(self.__metrics_file)
