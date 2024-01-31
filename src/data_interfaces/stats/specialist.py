@@ -3,6 +3,7 @@ from data_interfaces.base_interface import BaseInterface
 class SpecialistStats(BaseInterface):
     def __init__(self, env, seed, name, **kwargs):
         features = [
+            'generation',
             'specialist_score',
             'specialist_cycle',
             'specialist_fit_prediction_proportion',

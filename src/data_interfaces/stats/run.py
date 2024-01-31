@@ -6,6 +6,7 @@ from data_interfaces.base_interface import BaseInterface
 class RunStats(BaseInterface):
     def __init__(self, env, seed, features, **kwargs):
         features = features if features else [
+            'generation',
             'msteps',
             'bestfit',
             'bestgfit',

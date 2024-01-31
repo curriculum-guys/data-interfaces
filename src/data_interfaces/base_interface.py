@@ -57,7 +57,7 @@ class BaseInterface:
         return len(self.columns)
 
     def __stg_format(self, stage):
-        return f'{self.stage_dir}/s{self.seed}_g{stage}_stg.npy'
+        return f'{self.stage_dir}/s{self.seed}_stg{stage}.npy'
 
     def __purge_stg(self):
         try:
@@ -93,7 +93,6 @@ class BaseInterface:
                 save_data = np.append(save_data, data, axis=0)
                 stg_len.append(len(data))
         df = pd.DataFrame(save_data[1:], columns=self.columns)
-        df['gen'] = self.__stg_col(stg_len)
         df.to_csv(data_file, index=False)
         self.__purge_stg()
 
