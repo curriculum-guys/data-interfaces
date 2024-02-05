@@ -6,7 +6,15 @@ from data_interfaces.remote.drive_manager import DriveManager
 from pydrive.settings import InvalidConfigError
 
 class BaseInterface:
-    def __init__(self, env, seed, columns, interface_dir, upload_reference=None, remote_upload=False):
+    def __init__(self,
+        env,
+        seed,
+        columns,
+        interface_dir,
+        stage_length=1,
+        upload_reference=None,
+        remote_upload=False
+    ):
         self.columns = columns
         self.seed = seed
         self.env = env
@@ -19,6 +27,7 @@ class BaseInterface:
         self.stage_dir = self.interface_dir + '/stg/'
         create_dir(self.stage_dir)
         self.stages = []
+        self.stage_length = stage_length
 
         self.upload_reference = upload_reference
         self.upload_enabled = remote_upload
@@ -49,52 +58,63 @@ class BaseInterface:
             print(f"[{self.interface_name}] Something went wrong when trying to upload data.")
 
     @property
-    def __empty_matrix(self):
-        return [np.arange(self.__n_columns)]
+    def _empty_matrix(self):
+        return np.zeros((self.n_stages * self.stage_length, self.n_columns))
 
     @property
-    def __n_columns(self):
+    def n_stages(self):
+        return len(self.stages)
+
+    @property
+    def n_columns(self):
         return len(self.columns)
 
-    def __stg_format(self, stage):
+    def _stg_format(self, stage):
         return f'{self.stage_dir}/s{self.seed}_stg{stage}.npy'
 
-    def __purge_stg(self):
+    def _stg_col(self):
+        stg_col = []
+        for stg in self.stages:
+            stg_col += [stg] * self.stage_length
+        return stg_col
+
+    def _get_stg(self, stg):
+        stg_file = self._stg_format(stg)
+        if verify_file(stg_file):
+            data = np.load(stg_file, allow_pickle=True)
+            return data
+        return []
+
+    def _purge_stg(self):
         try:
             for stg in self.stages:
-                stg_file = self.__stg_format(stg)
+                stg_file = self._stg_format(stg)
                 remove_file(stg_file)
         except Exception as e:
             print('Error Purging staging files')
 
-    def __stg_col(self, stg_len):
-        col = []
-        for i in range(len(stg_len)):
-            col.append([self.stages[i]] * stg_len[i])
-        if col:
-            return np.concatenate(col)
-        return []
-
     def save_stg(self, data, stage):
-        stg_file = self.__stg_format(stage)
+        stg_file = self._stg_format(stage)
         data = data if np.array(data).ndim > 1 else [data]
-        data = np.asarray(data)
-        np.save(stg_file, data)
+        np.save(stg_file, np.asarray(data))
         self.stages.append(stage)
 
-    def save(self):
+    def persistence_method(self, data):
         data_file = f'{self.interface_dir}/s{self.seed}_run.csv'
-        save_data = self.__empty_matrix
-        stg_len = []
-        for stg in self.stages:
-            stg_file = self.__stg_format(stg)
-            if verify_file(stg_file):
-                data = np.load(stg_file, allow_pickle=True)
-                save_data = np.append(save_data, data, axis=0)
-                stg_len.append(len(data))
-        df = pd.DataFrame(save_data[1:], columns=self.columns)
+        df = pd.DataFrame(data, columns=self.columns)
+        df['gen'] = self._stg_col()
         df.to_csv(data_file, index=False)
-        self.__purge_stg()
+
+    def save(self):
+        save_data = self._empty_matrix
+        row_index = 0
+        for stg in self.stages:
+            data = self._get_stg(stg)
+            for row in data:
+                save_data[row_index] = row
+                row_index += 1
+        self.persistence_method(save_data)
+        self._purge_stg()
 
         if self.upload_enabled:
             self.upload()
