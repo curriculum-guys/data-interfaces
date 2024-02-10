@@ -7,8 +7,10 @@ def get_root_dir(root=None):
     abs_root = root if root else os.getenv.get('absolute_root', None)
     interface_root = os.environ.get('interface_root', None)
     if abs_root:
+        print(f"Using absolute root [{abs_root}]")
         return abs_root
     elif interface_root:
+        print(f"Using interface root [{interface_root}]")
         exe_path = str(os.getcwd())
         split_str = exe_path.split(interface_root)
         return split_str[0] + interface_root
