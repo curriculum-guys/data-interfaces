@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 from data_interfaces.utils import get_root_dir, create_dir, remove_file, verify_file, create_dirs
@@ -8,15 +9,13 @@ class BaseInterface:
         seed,
         columns,
         interface_dir,
-        root=None,
         stage_length=1,
         upload_reference=None
     ):
-        self.root = root if root else get_root_dir()
         self.columns = columns
         self.seed = seed
         self.env = env
-        self.data_dir = f'{self.root}/data/'
+        self.data_dir = f'{get_root_dir()}/data/'
         self.env_dir = self.data_dir + self.env
         create_dir(self.env_dir)
         self.interface_name = interface_dir.replace('/', '').replace('_', '')
@@ -28,15 +27,6 @@ class BaseInterface:
         self.stage_length = stage_length
 
         self.upload_reference = upload_reference
-
-    @property
-    def root(self):
-        return self._root
-
-    @root.setter
-    def root(self, root):
-        create_dirs(root)
-        self._root = root
 
     @property
     def _empty_matrix(self):
