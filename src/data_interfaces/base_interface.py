@@ -12,11 +12,11 @@ class BaseInterface:
         stage_length=1,
         upload_reference=None
     ):
-        self._root = root
+        self.root = root
         self.columns = columns
         self.seed = seed
         self.env = env
-        self.data_dir = f'{self.root}/data/'
+        self.data_dir = f'{self.get_root()}/data/'
         self.env_dir = self.data_dir + self.env
         create_dir(self.env_dir)
         self.interface_name = interface_dir.replace('/', '').replace('_', '')
@@ -29,9 +29,13 @@ class BaseInterface:
 
         self.upload_reference = upload_reference
 
-    @property
-    def root(self):
-        return self._root if self._root else get_root_dir()
+    def get_root(self):
+        if self.root:
+            dirs = self.root.split('/')
+            create_dirs(dirs)
+            return self.root
+        else:
+            return get_root_dir()
 
     @property
     def _empty_matrix(self):
