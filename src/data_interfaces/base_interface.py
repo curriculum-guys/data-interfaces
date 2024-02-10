@@ -1,9 +1,6 @@
 import numpy as np
 import pandas as pd
-from datetime import datetime
 from data_interfaces.utils import get_root_dir, create_dir, remove_file, verify_file, create_dirs
-from data_interfaces.remote.drive_manager import DriveManager
-from pydrive.settings import InvalidConfigError
 
 class BaseInterface:
     def __init__(self,
@@ -11,14 +8,15 @@ class BaseInterface:
         seed,
         columns,
         interface_dir,
+        root=None,
         stage_length=1,
-        upload_reference=None,
-        remote_upload=False
+        upload_reference=None
     ):
+        self._root = root
         self.columns = columns
         self.seed = seed
         self.env = env
-        self.data_dir = f'{get_root_dir()}/data/'
+        self.data_dir = f'{self.root}/data/'
         self.env_dir = self.data_dir + self.env
         create_dir(self.env_dir)
         self.interface_name = interface_dir.replace('/', '').replace('_', '')
@@ -30,32 +28,10 @@ class BaseInterface:
         self.stage_length = stage_length
 
         self.upload_reference = upload_reference
-        self.upload_enabled = remote_upload
-        if self.upload_enabled:
-            self.drive_manager = DriveManager()
-            self.fetch_drive()
 
-    def fetch_drive(self):
-        try:
-            self.drive_manager.get_drive()
-        except InvalidConfigError:
-            print("Missing Credentials! Please check if you have the 'client_credentials.json' file on your workspace.")
-        except Exception as e:
-            raise e
-
-    def upload(self):
-        now = datetime.now()
-        date_time = now.strftime("%Y%m%d")
-
-        data_file = f'{self.interface_dir}/s{self.seed}_run.csv'
-        data_name = f's{self.seed}_{self.interface_name}_d{date_time}.csv'
-
-        try:
-            print(f"[{self.interface_name}] Beginning the process of data uploading.")
-            self.drive_manager.upload_file(data_file, data_name, self.upload_reference)
-            print(f"[{self.interface_name}] Data Uploaded.")
-        except Exception:
-            print(f"[{self.interface_name}] Something went wrong when trying to upload data.")
+    @property
+    def root(self):
+        return self._root if self._root else get_root_dir()
 
     @property
     def _empty_matrix(self):
@@ -115,6 +91,3 @@ class BaseInterface:
                 row_index += 1
         self.persistence_method(save_data)
         self._purge_stg()
-
-        if self.upload_enabled:
-            self.upload()
