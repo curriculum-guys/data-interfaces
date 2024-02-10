@@ -16,6 +16,7 @@ class BaseInterface:
         self.seed = seed
         self.env = env
         self.data_dir = f'{get_root_dir()}/data/'
+        create_dir(self.data_dir)
         self.env_dir = self.data_dir + self.env
         create_dir(self.env_dir)
         self.interface_name = interface_dir.replace('/', '').replace('_', '')
