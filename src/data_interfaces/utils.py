@@ -8,7 +8,7 @@ def get_root_dir(root=None):
     interface_root = os.getenv('interface_root', None)
     if abs_root:
         print(f"Data Interface: Using absolute root [{abs_root}]")
-        create_dirs(abs_root)
+        create_dirs("/", directories=abs_root)
         return abs_root
     elif interface_root:
         print(f"Data Interface: Using interface root [{interface_root}]")
